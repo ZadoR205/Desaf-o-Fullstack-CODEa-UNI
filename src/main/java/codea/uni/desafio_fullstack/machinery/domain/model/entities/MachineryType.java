@@ -23,4 +23,8 @@ public class MachineryType extends AuditableAbstractAggregateRoot<MachineryType>
     @Column(nullable = false, name = "maintenance_time")
     private int maintenanceTime;
 
+    public MachineryType(codea.uni.desafio_fullstack.machinery.domain.model.commands.CreateMachineryTypeCommand command) {
+        this.name = command.name();
+        this.maintenanceTime = command.maintenanceTime();
+    }
 }
