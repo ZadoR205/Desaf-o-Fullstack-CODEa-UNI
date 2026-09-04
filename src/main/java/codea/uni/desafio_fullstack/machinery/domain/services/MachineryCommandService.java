@@ -9,6 +9,8 @@ public interface MachineryCommandService {
     Optional<Machinery> handle(CreateMachineryCommand command);
     Optional<Machinery> handle(UpdateMachineryMachineryTypeCommand command);
     Optional<Machinery> handle(UpdateMachineryHourMeterCommand command);
+    Optional<Machinery> handle(RecordMachineryWorkedHoursCommand command);
+    Optional<Machinery> handle(ResetMachineryMaintenanceCommand command);
     Optional<Machinery> handle(ChangeMachineryStateCommand command);
     void handle(DeleteMachineryCommand command);
 }

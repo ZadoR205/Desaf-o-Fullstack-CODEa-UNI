@@ -7,10 +7,12 @@ import codea.uni.desafio_fullstack.machinery.domain.services.MachineryCommandSer
 import codea.uni.desafio_fullstack.machinery.infrastructure.persistence.jpa.repositories.MachineryRepository;
 import codea.uni.desafio_fullstack.machinery.infrastructure.persistence.jpa.repositories.MachineryTypeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class MachineryCommandServiceImpl implements MachineryCommandService {
     private final MachineryRepository machineryRepository;
     private final MachineryTypeRepository machineryTypeRepository;
@@ -39,16 +41,41 @@ public class MachineryCommandServiceImpl implements MachineryCommandService {
                 .orElseThrow(() -> new IllegalArgumentException("MachineryType not found for id: " + command.machineryTypeId()));
 
         machinery.setMachineryType(machineryType);
+        machinery.checkAndApplyMaintenanceThreshold();
         this.machineryRepository.save(machinery);
         return Optional.of(machinery);
     }
 
     @Override
     public Optional<Machinery> handle(UpdateMachineryHourMeterCommand command) {
+        var machinery = this.machineryRepository.findByCodeWithType(command.code())
+                .orElseGet(() -> this.machineryRepository.findById(command.code())
+                        .orElseThrow(() -> new IllegalArgumentException("Machinery not found with code: " + command.code())));
+
+        machinery.setHourMeter(command.hours());
+        machinery.checkAndApplyMaintenanceThreshold();
+        this.machineryRepository.save(machinery);
+        return Optional.of(machinery);
+    }
+
+    @Override
+    public Optional<Machinery> handle(RecordMachineryWorkedHoursCommand command) {
+        var machinery = this.machineryRepository.findByCodeWithLock(command.code())
+                .orElseGet(() -> this.machineryRepository.findByCodeWithType(command.code())
+                        .orElseGet(() -> this.machineryRepository.findById(command.code())
+                                .orElseThrow(() -> new IllegalArgumentException("Machinery not found with code: " + command.code()))));
+
+        machinery.recordWorkedHours(command.workedHours());
+        this.machineryRepository.save(machinery);
+        return Optional.of(machinery);
+    }
+
+    @Override
+    public Optional<Machinery> handle(ResetMachineryMaintenanceCommand command) {
         var machinery = this.machineryRepository.findById(command.code())
                 .orElseThrow(() -> new IllegalArgumentException("Machinery not found with code: " + command.code()));
 
-        machinery.setHourMeter(command.hours());
+        machinery.resetAfterMaintenance();
         this.machineryRepository.save(machinery);
         return Optional.of(machinery);
     }
@@ -71,3 +98,4 @@ public class MachineryCommandServiceImpl implements MachineryCommandService {
         this.machineryRepository.deleteById(command.code());
     }
 }
+
