@@ -3,12 +3,14 @@ package codea.uni.desafio_fullstack.machinery.domain.model.entities;
 import codea.uni.desafio_fullstack.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name="machinery_type")
 @Getter
 @Setter
+@NoArgsConstructor
 public class MachineryType extends AuditableAbstractAggregateRoot<MachineryType> {
 
     @Id

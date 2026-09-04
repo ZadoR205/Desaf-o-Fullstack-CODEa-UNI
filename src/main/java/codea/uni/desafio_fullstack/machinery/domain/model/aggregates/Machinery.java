@@ -1,15 +1,18 @@
 package codea.uni.desafio_fullstack.machinery.domain.model.aggregates;
 
+import codea.uni.desafio_fullstack.machinery.domain.model.commands.CreateMachineryCommand;
 import codea.uni.desafio_fullstack.machinery.domain.model.entities.MachineryType;
 import codea.uni.desafio_fullstack.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name="machinery")
 @Setter
 @Getter
+@NoArgsConstructor
 public class Machinery extends AuditableAbstractAggregateRoot<Machinery> {
     @Id
     @Column(nullable = false,unique = true, length = 20)
@@ -24,4 +27,9 @@ public class Machinery extends AuditableAbstractAggregateRoot<Machinery> {
 
     @Column(nullable = false)
     private boolean state = true; // true: ACTIVO, false: BLOQUEADO
+
+    public Machinery(CreateMachineryCommand command, MachineryType machineryType) {
+        this.code = command.code();
+        this.machineryType = machineryType;
+    }
 }
