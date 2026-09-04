@@ -1,6 +1,6 @@
 package codea.uni.desafio_fullstack.machinery.interfaces.rest.resources;
 
-public record UpdateMachineryTypeResource(String name, int maintenanceTime) {
+public record UpdateMachineryTypeResource(Integer id, String name, int maintenanceTime) {
     public UpdateMachineryTypeResource {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Machinery type name cannot be empty");
