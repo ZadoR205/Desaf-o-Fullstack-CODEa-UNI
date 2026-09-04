@@ -1,5 +1,5 @@
-﻿/**
+/**
  * Machinery and Equipment Bounded Context
- * Package: codea.uni.desafio_fullstack.machinery.domain.model.valueobjects
+ * Package: codea.uni.desafio_fullstack.machinery.domain.model.entities
  */
 package codea.uni.desafio_fullstack.machinery.domain.model.valueobjects;
