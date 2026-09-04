@@ -38,4 +38,9 @@ public class MachineryQueryServiceImpl implements MachineryQueryService {
     public Optional<Machinery> handle(GetMachineryByCodeQuery query) {
         return this.machineryRepository.findMachineryByCode(query.code());
     }
+
+    @Override
+    public List<Machinery> handle(codea.uni.desafio_fullstack.machinery.domain.model.queries.GetAllMachineryQuery query) {
+        return this.machineryRepository.findAll();
+    }
 }
