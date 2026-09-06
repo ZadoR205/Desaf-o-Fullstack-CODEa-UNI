@@ -8,8 +8,10 @@ import codea.uni.desafio_fullstack.machinery.domain.model.commands.ResetMachiner
 import codea.uni.desafio_fullstack.machinery.domain.model.entities.MachineryType;
 import codea.uni.desafio_fullstack.machinery.domain.model.queries.GetAllMachineryQuery;
 import codea.uni.desafio_fullstack.machinery.domain.model.queries.GetMachineryByCodeQuery;
+import codea.uni.desafio_fullstack.machinery.domain.model.queries.GetMachineryTypeByIdQuery;
 import codea.uni.desafio_fullstack.machinery.domain.services.MachineryCommandService;
 import codea.uni.desafio_fullstack.machinery.domain.services.MachineryQueryService;
+import codea.uni.desafio_fullstack.machinery.domain.services.MachineryTypeQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,9 @@ class MachineryContextFacadeTest {
 
     @Mock
     private MachineryQueryService machineryQueryService;
+
+    @Mock
+    private MachineryTypeQueryService machineryTypeQueryService;
 
     @InjectMocks
     private MachineryContextFacadeImpl machineryContextFacade;
@@ -128,5 +133,23 @@ class MachineryContextFacadeTest {
         assertEquals(100.0f, summary.remainingHoursToMaintenance());
         assertTrue(summary.active());
         assertFalse(summary.blocked());
+    }
+
+    @Test
+    @DisplayName("existsMachineryTypeById should return true when machinery type exists")
+    void existsMachineryTypeById_WhenExists_ReturnsTrue() {
+        when(machineryTypeQueryService.handle(any(GetMachineryTypeByIdQuery.class))).thenReturn(Optional.of(machineryType));
+
+        assertTrue(machineryContextFacade.existsMachineryTypeById(10));
+        verify(machineryTypeQueryService).handle(any(GetMachineryTypeByIdQuery.class));
+    }
+
+    @Test
+    @DisplayName("existsMachineryTypeById should return false when id is null or not found")
+    void existsMachineryTypeById_WhenNotFoundOrNull_ReturnsFalse() {
+        assertFalse(machineryContextFacade.existsMachineryTypeById(null));
+
+        when(machineryTypeQueryService.handle(any(GetMachineryTypeByIdQuery.class))).thenReturn(Optional.empty());
+        assertFalse(machineryContextFacade.existsMachineryTypeById(999));
     }
 }
