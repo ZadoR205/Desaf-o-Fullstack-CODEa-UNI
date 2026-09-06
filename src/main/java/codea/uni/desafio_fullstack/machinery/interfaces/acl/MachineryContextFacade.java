@@ -45,6 +45,9 @@ public interface MachineryContextFacade {
     Optional<MachinerySummaryRecord> getMachinerySummary(String machineryCode);
 
 
+    // Checks if a machinery type exists by its ID (used by operators context to validate certification issuance).
+    boolean existsMachineryTypeById(Integer machineryTypeId);
+
     // Retrieves all machineries formatted as summaries for maintenance projection calculations (e.g. 7-day forecast).
     List<MachinerySummaryRecord> getAllMachineriesForProjection();
 }

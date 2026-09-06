@@ -33,13 +33,10 @@ public class Machinery extends AuditableAbstractAggregateRoot<Machinery> {
         this.machineryType = machineryType;
     }
 
-    /**
-     * Records worked hours from an operation or closed shift.
-     * Increments the hour meter and automatically blocks the equipment if it reaches or exceeds the maintenance threshold.
-     *
-     * @param workedHours Hours worked during the shift (must be positive)
-     * @return true if the equipment is now blocked, false otherwise
-     */
+//    Records worked hours from an operation or closed shift.
+//    Increments the hour meter and automatically blocks the equipment if it reaches or exceeds the maintenance threshold.
+//    @param workedHours Hours worked during the shift (must be positive)
+//    @return true if the equipment is now blocked, false otherwise
     public boolean recordWorkedHours(float workedHours) {
         if (workedHours <= 0) {
             throw new IllegalArgumentException("Worked hours must be greater than zero");
@@ -48,12 +45,11 @@ public class Machinery extends AuditableAbstractAggregateRoot<Machinery> {
         return checkAndApplyMaintenanceThreshold();
     }
 
-    /**
-     * Checks if current hour meter has reached or exceeded the maintenance threshold of its machinery type.
-     * If so, marks the state as false (BLOQUEADO).
-     *
-     * @return true if the machinery is blocked, false if active
-     */
+
+//   Checks if current hour meter has reached or exceeded the maintenance threshold of its machinery type.
+//   If so, marks the state as false (BLOQUEADO).
+//
+//   @return true if the machinery is blocked, false if active
     public boolean checkAndApplyMaintenanceThreshold() {
         if (this.machineryType != null && this.hourMeter >= this.machineryType.getMaintenanceTime()) {
             this.state = false;
@@ -61,10 +57,9 @@ public class Machinery extends AuditableAbstractAggregateRoot<Machinery> {
         return isBlocked();
     }
 
-    /**
-     * Resets the hour meter and unblocks the machinery following completed maintenance.
-     * Implements Business Policy P3 (POLITICA_REINICIO_CICLO_MANTENIMIENTO = horometer resets to 0 upon maintenance).
-     */
+
+//    Resets the hour meter and unblocks the machinery following completed maintenance.
+//    Implements Business Policy P3 (POLITICA_REINICIO_CICLO_MANTENIMIENTO = horometer resets to 0 upon maintenance).
     public void resetAfterMaintenance() {
         this.hourMeter = 0.0f;
         this.state = true;

@@ -5,8 +5,10 @@ import codea.uni.desafio_fullstack.machinery.domain.model.commands.RecordMachine
 import codea.uni.desafio_fullstack.machinery.domain.model.commands.ResetMachineryMaintenanceCommand;
 import codea.uni.desafio_fullstack.machinery.domain.model.queries.GetAllMachineryQuery;
 import codea.uni.desafio_fullstack.machinery.domain.model.queries.GetMachineryByCodeQuery;
+import codea.uni.desafio_fullstack.machinery.domain.model.queries.GetMachineryTypeByIdQuery;
 import codea.uni.desafio_fullstack.machinery.domain.services.MachineryCommandService;
 import codea.uni.desafio_fullstack.machinery.domain.services.MachineryQueryService;
+import codea.uni.desafio_fullstack.machinery.domain.services.MachineryTypeQueryService;
 import codea.uni.desafio_fullstack.machinery.interfaces.acl.records.MachinerySummaryRecord;
 import codea.uni.desafio_fullstack.machinery.interfaces.acl.records.MachineryWorkedHoursResult;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,14 @@ public class MachineryContextFacadeImpl implements MachineryContextFacade {
 
     private final MachineryCommandService machineryCommandService;
     private final MachineryQueryService machineryQueryService;
+    private final MachineryTypeQueryService machineryTypeQueryService;
 
-    public MachineryContextFacadeImpl(MachineryCommandService machineryCommandService, MachineryQueryService machineryQueryService) {
+    public MachineryContextFacadeImpl(MachineryCommandService machineryCommandService,
+                                      MachineryQueryService machineryQueryService,
+                                      MachineryTypeQueryService machineryTypeQueryService) {
         this.machineryCommandService = machineryCommandService;
         this.machineryQueryService = machineryQueryService;
+        this.machineryTypeQueryService = machineryTypeQueryService;
     }
 
     @Override
@@ -103,6 +109,14 @@ public class MachineryContextFacadeImpl implements MachineryContextFacade {
         }
         return this.machineryQueryService.handle(new GetMachineryByCodeQuery(machineryCode))
                 .map(this::toSummaryRecord);
+    }
+
+    @Override
+    public boolean existsMachineryTypeById(Integer machineryTypeId) {
+        if (machineryTypeId == null) {
+            return false;
+        }
+        return this.machineryTypeQueryService.handle(new GetMachineryTypeByIdQuery(machineryTypeId)).isPresent();
     }
 
     @Override
